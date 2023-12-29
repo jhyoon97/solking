@@ -1,9 +1,13 @@
+import { useState, useEffect } from "react";
 import Head from "next/head";
 import { css } from "@emotion/react";
 import dayjs from "dayjs";
 
 // components
 import Skill from "components/Skill";
+
+// constants
+import solTable from "constants/solTable";
 
 // utils
 import nexonAxios from "utils/nexonAxios";
@@ -45,7 +49,7 @@ const characterInfo = css`
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
-  alitn-items: center;
+  align-items: center;
   padding: 1rem;
   margin-bottom: 1rem;
   width: 506px;
@@ -56,11 +60,34 @@ const characterInfo = css`
 
 const matrix = css`
   position: relative;
+  margin-bottom: 1rem;
   width: 506px;
   height: 507px;
   background: url("/matrix.png") no-repeat;
   background-color: #232735;
   border-radius: 1rem;
+`;
+
+const totalInfo = css`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  padding: 1rem;
+  width: 506px;
+  background: #232735;
+  border-radius: 1rem;
+  color: #fff;
+
+  & .group {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    & span {
+      margin-left: 0.5rem;
+    }
+  }
 `;
 
 const viPositions: Array<SkillPosition> = [
@@ -98,6 +125,39 @@ const Page = ({
   currentHexaMatrix,
   errorCode,
 }: Props) => {
+  const [total, setTotal] = useState({ erda: 0, peace: 0 });
+
+  useEffect(() => {
+    if (currentHexaMatrix) {
+      setTotal(
+        currentHexaMatrix.reduce(
+          (acc, skill) => {
+            const column = (() => {
+              switch (skill.hexa_core_type) {
+                case "스킬 코어":
+                  return "vi";
+                case "강화 코어":
+                  return "v";
+                case "마스터리 코어":
+                  return "mastery";
+                default:
+                  return "common";
+              }
+            })();
+
+            for (let i = 0; i < skill.hexa_core_level; i += 1) {
+              acc.erda += solTable[column][i].erda;
+              acc.peace += solTable[column][i].peace;
+            }
+
+            return acc;
+          },
+          { erda: 0, peace: 0 }
+        )
+      );
+    }
+  }, [currentHexaMatrix]);
+
   if (!currentHexaMatrix) {
     return null;
   }
@@ -205,6 +265,22 @@ const Page = ({
                 />
               );
             })}
+        </div>
+
+        <div css={totalInfo}>
+          <div className="group">
+            <img alt="솔 에르다" src="/solErda.png" width="32" height="33" />
+            <span>{total.erda}</span>
+          </div>
+          <div className="group">
+            <img
+              alt="솔 에르다"
+              src="/solErdaPeace.png"
+              width="54"
+              height="57"
+            />
+            <span>{total.peace}</span>
+          </div>
         </div>
       </div>
     </>

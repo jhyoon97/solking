@@ -12,6 +12,11 @@ const box = css`
   align-items: center;
 `;
 
+const button = css`
+  border: 1px solid white;
+  color: white;
+`;
+
 const Page = () => {
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -33,8 +38,10 @@ const Page = () => {
           router.push(`/${inputRef.current?.value}`);
         }}
       >
-        <input ref={inputRef} />
-        <button type="submit">검색</button>
+        <input ref={inputRef} placeholder="닉네임을 입력해주세요." />
+        <button type="submit" css={button}>
+          검색
+        </button>
       </form>
     </>
   );

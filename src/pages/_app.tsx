@@ -2,7 +2,7 @@ import axios from "axios";
 import { Global } from "@emotion/react";
 
 // config
-import config from "config";
+import config from "constants/config";
 
 // utils
 import resetCss from "utils/resetCss";
