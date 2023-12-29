@@ -2,16 +2,20 @@ import Head from "next/head";
 import { css } from "@emotion/react";
 import dayjs from "dayjs";
 
+// components
+import Skill from "components/Skill";
+
 // utils
 import nexonAxios from "utils/nexonAxios";
 
 // types
 import type { GetServerSideProps } from "next";
+import type { SkillPosition, HexaMatrixItemWithIcon } from "types/app";
 import type {
   GetIdResponse,
   GetCharacterBasicInfoResponse,
   GetSkillResponse,
-  GetSkillItemResponse,
+  GetHexaMatrixResponse,
 } from "types/nexon-api";
 
 interface Props {
@@ -19,7 +23,7 @@ interface Props {
   level?: number;
   image?: string;
   className?: string;
-  currentHexaMatrix?: Array<GetSkillItemResponse>;
+  currentHexaMatrix?: Array<HexaMatrixItemWithIcon>;
   errorCode?: "IS_NOT_REBOOT_WORLD" | "IS_NOT_SIXTH_CLASS" | "UNKNOWN";
 }
 
@@ -27,6 +31,64 @@ interface Params {
   [key: string]: string;
   nickname: string;
 }
+
+const box = css`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+`;
+
+const characterInfo = css`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  alitn-items: center;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  width: 506px;
+  background: #232735;
+  border-radius: 1rem;
+  color: #fff;
+`;
+
+const matrix = css`
+  position: relative;
+  width: 506px;
+  height: 507px;
+  background: url("/matrix.png") no-repeat;
+  background-color: #232735;
+  border-radius: 1rem;
+`;
+
+const viPositions: Array<SkillPosition> = [
+  { x: 170, y: 142 },
+  { x: 100, y: 142 },
+  { x: 135, y: 82 },
+  { x: 65, y: 82 },
+  { x: 100, y: 22 },
+  { x: 30, y: 22 },
+];
+const vPositions: Array<SkillPosition> = [
+  { x: 170, y: 286 },
+  { x: 135, y: 346 },
+  { x: 65, y: 346 },
+  { x: 30, y: 406 },
+];
+const masteryPositions: Array<SkillPosition> = [
+  { x: 268, y: 142 },
+  { x: 303, y: 82 },
+  { x: 373, y: 82 },
+  { x: 408, y: 22 },
+];
+const commonPositions: Array<SkillPosition> = [
+  { x: 268, y: 286 },
+  { x: 303, y: 346 },
+  { x: 373, y: 346 },
+  { x: 408, y: 406 },
+];
 
 const Page = ({
   nickname,
@@ -36,28 +98,114 @@ const Page = ({
   currentHexaMatrix,
   errorCode,
 }: Props) => {
+  if (!currentHexaMatrix) {
+    return null;
+  }
+
+  const viSkills = currentHexaMatrix.filter(
+    (item) => item.hexa_core_type === "스킬 코어"
+  );
+  const vSkills = currentHexaMatrix.filter(
+    (item) => item.hexa_core_type === "강화 코어"
+  );
+  const masterySkills = currentHexaMatrix.filter(
+    (item) => item.hexa_core_type === "마스터리 코어"
+  );
+  const commonSkills = currentHexaMatrix.filter(
+    (item) => item.hexa_core_type === "공용 코어"
+  );
+
   return (
     <>
       <Head>
-        <title>{nickname}</title>
+        <title>솔킹 - {nickname}</title>
         <meta name="description" content="리부트 조각 파밍 랭킹" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.png" />
       </Head>
 
-      <div>
-        <img alt={`${level} ${className} ${nickname}`} src={image} />
-        <p>
-          {level} {className} {nickname}
-        </p>
-        {currentHexaMatrix?.map((skill) => {
-          return (
-            <div>
-              <img alt={skill.skill_name} src={skill.skill_icon} />
-              {skill.skill_name} {skill.skill_level}
-            </div>
-          );
-        })}
+      <div css={box}>
+        <div css={characterInfo}>
+          <img alt={`${level} ${className} ${nickname}`} src={image} />
+          <span>
+            Lv.{level} {className} {nickname}
+          </span>
+        </div>
+
+        <div css={matrix}>
+          {viSkills
+            .concat(
+              new Array(6 - viSkills.length).fill({
+                hexa_core_type: "스킬 코어",
+              })
+            )
+            .map((item, index) => {
+              return (
+                <Skill
+                  key={item.hexa_core_name || index}
+                  variant={item.hexa_core_type}
+                  name={item.hexa_core_name}
+                  level={item.hexa_core_level}
+                  icon={item.icon}
+                  position={viPositions[index]}
+                />
+              );
+            })}
+          {vSkills
+            .concat(
+              new Array(4 - vSkills.length).fill({
+                hexa_core_type: "강화 코어",
+              })
+            )
+            .map((item, index) => {
+              return (
+                <Skill
+                  key={item.hexa_core_name || index}
+                  variant={item.hexa_core_type}
+                  name={item.hexa_core_name}
+                  level={item.hexa_core_level}
+                  icon={item.icon}
+                  position={vPositions[index]}
+                />
+              );
+            })}
+          {masterySkills
+            .concat(
+              new Array(4 - masterySkills.length).fill({
+                hexa_core_type: "마스터리 코어",
+              })
+            )
+            .map((item, index) => {
+              return (
+                <Skill
+                  key={item.hexa_core_name || index}
+                  variant={item.hexa_core_type}
+                  name={item.hexa_core_name}
+                  level={item.hexa_core_level}
+                  icon={item.icon}
+                  position={masteryPositions[index]}
+                />
+              );
+            })}
+          {commonSkills
+            .concat(
+              new Array(4 - commonSkills.length).fill({
+                hexa_core_type: "공용 코어",
+              })
+            )
+            .map((item, index) => {
+              return (
+                <Skill
+                  key={item.hexa_core_name || index}
+                  variant={item.hexa_core_type}
+                  name={item.hexa_core_name}
+                  level={item.hexa_core_level}
+                  icon={item.icon}
+                  position={commonPositions[index]}
+                />
+              );
+            })}
+        </div>
       </div>
     </>
   );
@@ -107,9 +255,15 @@ export const getServerSideProps: GetServerSideProps<Props, Params> = async ({
       }
 
       const {
-        data: { character_skill: currentHexaMatrix },
+        data: { character_skill: currentSkills },
       } = await nexonAxios.get<GetSkillResponse>(
         `/character/skill?ocid=${ocid}&date=${date}&character_skill_grade=6`
+      );
+
+      const {
+        data: { character_hexa_core_equipment: currentHexaMatrix },
+      } = await nexonAxios.get<GetHexaMatrixResponse>(
+        `/character/hexamatrix?ocid=${ocid}&date=${date}`
       );
 
       return {
@@ -118,17 +272,32 @@ export const getServerSideProps: GetServerSideProps<Props, Params> = async ({
           image,
           level,
           className,
-          currentHexaMatrix,
+          currentHexaMatrix: currentHexaMatrix.map((item) => {
+            return {
+              hexa_core_name: item.hexa_core_name,
+              hexa_core_level: item.hexa_core_level,
+              hexa_core_type: item.hexa_core_type,
+              icon:
+                item.linked_skill.length > 1
+                  ? currentSkills.find(
+                      (skill) =>
+                        skill.skill_name === item.linked_skill[0].hexa_skill_id
+                    )?.skill_icon
+                  : currentSkills.find(
+                      (skill) => skill.skill_name === item.hexa_core_name
+                    )?.skill_icon,
+            };
+          }),
         },
       };
     }
 
     return {
-      props: { nickname: "UNKNOWN" },
+      props: { nickname: "ERROR", errorCode: "UNKNOWN" },
     };
   } catch (err) {
     return {
-      props: { errorCode: "UNKNOWN" },
+      props: { nickname: "ERROR", errorCode: "UNKNOWN" },
     };
   }
 };

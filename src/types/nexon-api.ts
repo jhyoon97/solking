@@ -30,3 +30,19 @@ export interface GetSkillItemResponse {
   skill_effect: string;
   skill_icon: string;
 }
+
+export interface GetHexaMatrixResponse {
+  date: string;
+  character_hexa_core_equipment: Array<HexaMatrixItem>;
+}
+
+export interface HexaMatrixItem {
+  hexa_core_name: string;
+  hexa_core_level: number;
+  hexa_core_type: "스킬 코어" | "강화 코어" | "마스터리 코어" | "공용 코어";
+  linked_skill: Array<LinkedSkill>;
+}
+
+interface LinkedSkill {
+  hexa_skill_id: string;
+}
