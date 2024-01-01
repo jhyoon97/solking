@@ -7,14 +7,24 @@ const box = css`
   display: flex;
   width: 100%;
   height: 100vh;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: center;
+  align-items: center;
+`;
+
+const searchBox = css`
+  display: flex;
+  flex-direction: row;
   align-items: center;
 `;
 
 const button = css`
   border: 1px solid white;
   color: white;
+`;
+
+const caution = css`
+  color: #fff;
 `;
 
 const Page = () => {
@@ -38,10 +48,16 @@ const Page = () => {
           router.push(`/${inputRef.current?.value}`);
         }}
       >
-        <input ref={inputRef} placeholder="닉네임을 입력해주세요." />
-        <button type="submit" css={button}>
-          검색
-        </button>
+        <div css={searchBox}>
+          <input ref={inputRef} placeholder="닉네임을 입력해주세요." />
+          <button type="submit" css={button}>
+            검색
+          </button>
+        </div>
+
+        <p css={caution}>
+          - 6차전직을 완료한 리부트, 리부트2 캐릭터만 검색 가능합니다.
+        </p>
       </form>
     </>
   );
