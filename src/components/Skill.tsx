@@ -23,20 +23,19 @@ const box = (background: string) => css`
 `;
 
 const levelBox = css`
-  margin: 14px 0 3px;
+  margin: 14px 0 2px;
   padding: 1px 0;
   width: 30px;
 
   background: rgba(0, 0, 0, 0.4);
   border-radius: 1rem;
+  box-shadow: rgba(255, 255, 255, 1) 0px 0px 2px;
 
   line-height: 1;
   font-size: 0.8rem;
   font-weight: 300;
   color: #fff;
   text-align: center;
-
-  box-shadow: rgba(255, 255, 255, 1) 0px 0px 2px;
 `;
 
 const Skill = ({ variant, name, level, icon, position }: Props) => {

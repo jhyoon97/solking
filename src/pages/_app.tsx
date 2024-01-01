@@ -1,6 +1,9 @@
 import axios from "axios";
 import { Global } from "@emotion/react";
 
+// layouts
+import Default from "layouts/Default";
+
 // config
 import config from "constants/config";
 
@@ -23,7 +26,9 @@ const App = ({ Component, pageProps }: AppProps) => {
   return (
     <>
       <Global styles={(theme) => resetCss(theme)} />
-      <Component {...pageProps} />;
+      <Default>
+        <Component {...pageProps} />
+      </Default>
     </>
   );
 };

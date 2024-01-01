@@ -1,5 +1,8 @@
 import { css } from "@emotion/react";
 
+// constants
+import style from "constants/style";
+
 // types
 import type { Theme } from "@emotion/react";
 
@@ -35,11 +38,12 @@ export default (theme: Theme) => css`
     tab-size: 4;
   }
   html {
-    font-size: 16px;
+    font-size: ${style.rootFontSize}px;
     background: #222;
   }
   html,
-  body {
+  body,
+  #__next {
     height: 100%;
   }
   img,
