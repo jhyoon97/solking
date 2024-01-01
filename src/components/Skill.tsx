@@ -1,5 +1,6 @@
 import { css } from "@emotion/react";
 import Image from "next/image";
+import { BiSolidLock } from "react-icons/bi";
 
 // types
 import type { SkillPosition } from "types/app";
@@ -20,6 +21,14 @@ const box = (background: string) => css`
   width: 68px;
   height: 78px;
   background: url(${background}) no-repeat;
+`;
+
+const lockIcon = css`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  filter: drop-shadow(0 0 2px rgba(155, 155, 155, 0.5));
 `;
 
 const levelBox = css`
@@ -50,10 +59,15 @@ const Skill = ({ variant, name, level, icon, position }: Props) => {
       default:
         return "common";
     }
-  })()}${icon ? "" : "_locked"}.png`;
+  })()}.png`;
 
   return (
     <div css={box(background)} style={{ top: position.y, left: position.x }}>
+      {!icon && (
+        <div css={lockIcon}>
+          <BiSolidLock color="rgba(255, 255, 255, 0.3)" size="35" />
+        </div>
+      )}
       {icon && <span css={levelBox}>{level}</span>}
       {icon && (
         <Image alt={name} src={icon} width="32" height="32" quality="100" />
