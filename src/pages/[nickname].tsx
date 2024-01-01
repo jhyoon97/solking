@@ -178,7 +178,7 @@ const Page = ({
   return (
     <>
       <Head>
-        <title>솔킹 - {nickname}</title>
+        <title>{`솔킹 - ${nickname}`}</title>
         <meta name="description" content="리부트 조각 파밍 랭킹" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.png" />
@@ -292,7 +292,9 @@ export const getServerSideProps: GetServerSideProps<Props, Params> = async ({
 }) => {
   try {
     if (params?.nickname) {
-      const date = dayjs().add(-1, "day").format("YYYY-MM-DD"); // 조회 기준일 - 금일기준 1일 전
+      const date = dayjs()
+        .add(dayjs().hour() > 1 ? -1 : -2, "day")
+        .format("YYYY-MM-DD"); // 조회 기준일 - 오전 1시 이후라면 전날의 데이터, 1시 이전이라면 2일 전 데이터 조회
 
       // 식별자 조회
       const {
@@ -372,6 +374,7 @@ export const getServerSideProps: GetServerSideProps<Props, Params> = async ({
       props: { nickname: "ERROR", errorCode: "UNKNOWN" },
     };
   } catch (err) {
+    console.log(err.response.data);
     return {
       props: { nickname: "ERROR", errorCode: "UNKNOWN" },
     };
