@@ -1,4 +1,5 @@
 import { css } from "@emotion/react";
+import Image from "next/image";
 
 // types
 import type { SkillPosition } from "types/app";
@@ -50,12 +51,14 @@ const Skill = ({ variant, name, level, icon, position }: Props) => {
       default:
         return "common";
     }
-  })()}${name ? "" : "_locked"}.png`;
+  })()}${icon ? "" : "_locked"}.png`;
 
   return (
     <div css={box(background)} style={{ top: position.y, left: position.x }}>
-      {name && <span css={levelBox}>{level}</span>}
-      <img alt={name} src={icon} />
+      {icon && <span css={levelBox}>{level}</span>}
+      {icon && (
+        <Image alt={name} src={icon} width="32" height="32" quality="100" />
+      )}
     </div>
   );
 };

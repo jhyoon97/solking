@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import Head from "next/head";
+import Image from "next/image";
 import { css } from "@emotion/react";
 import dayjs from "dayjs";
 
@@ -269,15 +270,22 @@ const Page = ({
 
         <div css={totalInfo}>
           <div className="group">
-            <img alt="솔 에르다" src="/solErda.png" width="32" height="33" />
+            <Image
+              alt="솔 에르다"
+              src="/solErda.png"
+              width="32"
+              height="33"
+              quality="100"
+            />
             <span>{total.erda}</span>
           </div>
           <div className="group">
-            <img
+            <Image
               alt="솔 에르다"
               src="/solErdaPeace.png"
-              width="54"
-              height="57"
+              width="30"
+              height="31"
+              quality="100"
             />
             <span>{total.peace}</span>
           </div>
@@ -356,14 +364,14 @@ export const getServerSideProps: GetServerSideProps<Props, Params> = async ({
               hexa_core_level: item.hexa_core_level,
               hexa_core_type: item.hexa_core_type,
               icon:
-                item.linked_skill.length > 1
+                (item.linked_skill.length > 1
                   ? currentSkills.find(
                       (skill) =>
                         skill.skill_name === item.linked_skill[0].hexa_skill_id
                     )?.skill_icon
                   : currentSkills.find(
                       (skill) => skill.skill_name === item.hexa_core_name
-                    )?.skill_icon,
+                    )?.skill_icon) || "",
             };
           }),
         },
@@ -374,7 +382,6 @@ export const getServerSideProps: GetServerSideProps<Props, Params> = async ({
       props: { nickname: "ERROR", errorCode: "UNKNOWN" },
     };
   } catch (err) {
-    console.log(err.response.data);
     return {
       props: { nickname: "ERROR", errorCode: "UNKNOWN" },
     };
