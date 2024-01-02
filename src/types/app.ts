@@ -18,3 +18,8 @@ interface SolTableCell {
   erda: number;
   peace: number;
 }
+
+export type DetailPageError =
+  | "IS_NOT_REBOOT_WORLD"
+  | "IS_NOT_SIXTH_CLASS"
+  | "UNKNOWN";

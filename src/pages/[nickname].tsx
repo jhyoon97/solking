@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
+import { css } from "@emotion/react";
 import Head from "next/head";
 import Image from "next/image";
-import { css } from "@emotion/react";
+import Error from "next/error";
 import dayjs from "dayjs";
 
 // components
 import Skill from "components/Skill";
+import CustomError from "components/CustomError";
 
 // constants
 import solTable from "constants/solTable";
@@ -15,7 +17,11 @@ import nexonAxios from "utils/nexonAxios";
 
 // types
 import type { GetServerSideProps } from "next";
-import type { SkillPosition, HexaMatrixItemWithIcon } from "types/app";
+import type {
+  DetailPageError,
+  SkillPosition,
+  HexaMatrixItemWithIcon,
+} from "types/app";
 import type {
   GetIdResponse,
   GetCharacterBasicInfoResponse,
@@ -24,12 +30,12 @@ import type {
 } from "types/nexon-api";
 
 interface Props {
-  nickname?: string;
+  nickname: string;
   level?: number;
   image?: string;
   className?: string;
   currentHexaMatrix?: Array<HexaMatrixItemWithIcon>;
-  errorCode?: "IS_NOT_REBOOT_WORLD" | "IS_NOT_SIXTH_CLASS" | "UNKNOWN";
+  errorCode?: DetailPageError;
 }
 
 interface Params {
@@ -159,22 +165,19 @@ const Page = ({
     }
   }, [currentHexaMatrix]);
 
-  if (!currentHexaMatrix) {
-    return null;
-  }
-
-  const viSkills = currentHexaMatrix.filter(
-    (item) => item.hexa_core_type === "스킬 코어"
-  );
-  const vSkills = currentHexaMatrix.filter(
-    (item) => item.hexa_core_type === "강화 코어"
-  );
-  const masterySkills = currentHexaMatrix.filter(
-    (item) => item.hexa_core_type === "마스터리 코어"
-  );
-  const commonSkills = currentHexaMatrix.filter(
-    (item) => item.hexa_core_type === "공용 코어"
-  );
+  const viSkills =
+    currentHexaMatrix?.filter((item) => item.hexa_core_type === "스킬 코어") ||
+    [];
+  const vSkills =
+    currentHexaMatrix?.filter((item) => item.hexa_core_type === "강화 코어") ||
+    [];
+  const masterySkills =
+    currentHexaMatrix?.filter(
+      (item) => item.hexa_core_type === "마스터리 코어"
+    ) || [];
+  const commonSkills =
+    currentHexaMatrix?.filter((item) => item.hexa_core_type === "공용 코어") ||
+    [];
 
   return (
     <>
@@ -186,110 +189,116 @@ const Page = ({
       </Head>
 
       <div css={box}>
-        <div css={characterInfo}>
-          <img alt={`${level} ${className} ${nickname}`} src={image} />
-          <span>
-            Lv.{level} {className} {nickname}
-          </span>
-        </div>
+        {errorCode ? (
+          <CustomError errorCode={errorCode} />
+        ) : (
+          <>
+            <div css={characterInfo}>
+              <img alt={`${level} ${className} ${nickname}`} src={image} />
+              <span>
+                Lv.{level} {className} {nickname}
+              </span>
+            </div>
 
-        <div css={matrix}>
-          {viSkills
-            .concat(
-              new Array(6 - viSkills.length).fill({
-                hexa_core_type: "스킬 코어",
-              })
-            )
-            .map((item, index) => {
-              return (
-                <Skill
-                  key={item.hexa_core_name || index}
-                  variant={item.hexa_core_type}
-                  name={item.hexa_core_name}
-                  level={item.hexa_core_level}
-                  icon={item.icon}
-                  position={viPositions[index]}
-                />
-              );
-            })}
-          {vSkills
-            .concat(
-              new Array(4 - vSkills.length).fill({
-                hexa_core_type: "강화 코어",
-              })
-            )
-            .map((item, index) => {
-              return (
-                <Skill
-                  key={item.hexa_core_name || index}
-                  variant={item.hexa_core_type}
-                  name={item.hexa_core_name}
-                  level={item.hexa_core_level}
-                  icon={item.icon}
-                  position={vPositions[index]}
-                />
-              );
-            })}
-          {masterySkills
-            .concat(
-              new Array(4 - masterySkills.length).fill({
-                hexa_core_type: "마스터리 코어",
-              })
-            )
-            .map((item, index) => {
-              return (
-                <Skill
-                  key={item.hexa_core_name || index}
-                  variant={item.hexa_core_type}
-                  name={item.hexa_core_name}
-                  level={item.hexa_core_level}
-                  icon={item.icon}
-                  position={masteryPositions[index]}
-                />
-              );
-            })}
-          {commonSkills
-            .concat(
-              new Array(4 - commonSkills.length).fill({
-                hexa_core_type: "공용 코어",
-              })
-            )
-            .map((item, index) => {
-              return (
-                <Skill
-                  key={item.hexa_core_name || index}
-                  variant={item.hexa_core_type}
-                  name={item.hexa_core_name}
-                  level={item.hexa_core_level}
-                  icon={item.icon}
-                  position={commonPositions[index]}
-                />
-              );
-            })}
-        </div>
+            <div css={matrix}>
+              {viSkills
+                .concat(
+                  new Array(6 - viSkills.length).fill({
+                    hexa_core_type: "스킬 코어",
+                  })
+                )
+                .map((item, index) => {
+                  return (
+                    <Skill
+                      key={item.hexa_core_name || index}
+                      variant={item.hexa_core_type}
+                      name={item.hexa_core_name}
+                      level={item.hexa_core_level}
+                      icon={item.icon}
+                      position={viPositions[index]}
+                    />
+                  );
+                })}
+              {vSkills
+                .concat(
+                  new Array(4 - vSkills.length).fill({
+                    hexa_core_type: "강화 코어",
+                  })
+                )
+                .map((item, index) => {
+                  return (
+                    <Skill
+                      key={item.hexa_core_name || index}
+                      variant={item.hexa_core_type}
+                      name={item.hexa_core_name}
+                      level={item.hexa_core_level}
+                      icon={item.icon}
+                      position={vPositions[index]}
+                    />
+                  );
+                })}
+              {masterySkills
+                .concat(
+                  new Array(4 - masterySkills.length).fill({
+                    hexa_core_type: "마스터리 코어",
+                  })
+                )
+                .map((item, index) => {
+                  return (
+                    <Skill
+                      key={item.hexa_core_name || index}
+                      variant={item.hexa_core_type}
+                      name={item.hexa_core_name}
+                      level={item.hexa_core_level}
+                      icon={item.icon}
+                      position={masteryPositions[index]}
+                    />
+                  );
+                })}
+              {commonSkills
+                .concat(
+                  new Array(4 - commonSkills.length).fill({
+                    hexa_core_type: "공용 코어",
+                  })
+                )
+                .map((item, index) => {
+                  return (
+                    <Skill
+                      key={item.hexa_core_name || index}
+                      variant={item.hexa_core_type}
+                      name={item.hexa_core_name}
+                      level={item.hexa_core_level}
+                      icon={item.icon}
+                      position={commonPositions[index]}
+                    />
+                  );
+                })}
+            </div>
 
-        <div css={totalInfo}>
-          <div className="group">
-            <Image
-              alt="솔 에르다"
-              src="/solErda.png"
-              width="32"
-              height="33"
-              quality="100"
-            />
-            <span>{total.erda}</span>
-          </div>
-          <div className="group">
-            <Image
-              alt="솔 에르다"
-              src="/solErdaPeace.png"
-              width="30"
-              height="31"
-              quality="100"
-            />
-            <span>{total.peace}</span>
-          </div>
-        </div>
+            <div css={totalInfo}>
+              <div className="group">
+                <Image
+                  alt="솔 에르다"
+                  src="/solErda.png"
+                  width="32"
+                  height="33"
+                  quality="100"
+                />
+                <span>{total.erda}</span>
+              </div>
+              <div className="group">
+                <Image
+                  alt="솔 에르다"
+                  src="/solErdaPeace.png"
+                  width="30"
+                  height="31"
+                  quality="100"
+                />
+                <span>{total.peace}</span>
+              </div>
+            </div>
+          </>
+        )}
       </div>
     </>
   );
@@ -298,8 +307,8 @@ const Page = ({
 export const getServerSideProps: GetServerSideProps<Props, Params> = async ({
   params,
 }) => {
-  try {
-    if (params?.nickname) {
+  if (params?.nickname) {
+    try {
       const date = dayjs()
         .add(dayjs().hour() > 1 ? -1 : -2, "day")
         .format("YYYY-MM-DD"); // 조회 기준일 - 오전 1시 이후라면 전날의 데이터, 1시 이전이라면 2일 전 데이터 조회
@@ -327,6 +336,7 @@ export const getServerSideProps: GetServerSideProps<Props, Params> = async ({
       if (!world.startsWith("리부트")) {
         return {
           props: {
+            nickname: params.nickname,
             errorCode: "IS_NOT_REBOOT_WORLD",
           },
         };
@@ -335,6 +345,7 @@ export const getServerSideProps: GetServerSideProps<Props, Params> = async ({
       if (classLevel !== "6") {
         return {
           props: {
+            nickname: params.nickname,
             errorCode: "IS_NOT_SIXTH_CLASS",
           },
         };
@@ -376,16 +387,16 @@ export const getServerSideProps: GetServerSideProps<Props, Params> = async ({
           }),
         },
       };
+    } catch (err) {
+      return {
+        props: { nickname: params.nickname, errorCode: "UNKNOWN" },
+      };
     }
-
-    return {
-      props: { nickname: "ERROR", errorCode: "UNKNOWN" },
-    };
-  } catch (err) {
-    return {
-      props: { nickname: "ERROR", errorCode: "UNKNOWN" },
-    };
   }
+
+  return {
+    props: { nickname: "ERROR", errorCode: "UNKNOWN" },
+  };
 };
 
 export default Page;
