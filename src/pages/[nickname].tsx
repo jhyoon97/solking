@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
 import { css } from "@emotion/react";
 import Head from "next/head";
-import Image from "next/image";
-import Error from "next/error";
 import dayjs from "dayjs";
 
 // components
@@ -277,22 +275,20 @@ const Page = ({
 
             <div css={totalInfo}>
               <div className="group">
-                <Image
+                <img
                   alt="솔 에르다"
                   src="/solErda.png"
                   width="32"
                   height="33"
-                  quality="100"
                 />
                 <span>{total.erda}</span>
               </div>
               <div className="group">
-                <Image
+                <img
                   alt="솔 에르다"
                   src="/solErdaPeace.png"
                   width="30"
                   height="31"
-                  quality="100"
                 />
                 <span>{total.peace}</span>
               </div>

@@ -1,5 +1,4 @@
 import { css } from "@emotion/react";
-import Image from "next/image";
 import { BiSolidLock } from "react-icons/bi";
 
 // types
@@ -69,9 +68,7 @@ const Skill = ({ variant, name, level, icon, position }: Props) => {
         </div>
       )}
       {icon && <span css={levelBox}>{level}</span>}
-      {icon && (
-        <Image alt={name} src={icon} width="32" height="32" quality="100" />
-      )}
+      {icon && <img alt={name} src={icon} width="32" height="32" />}
     </div>
   );
 };
