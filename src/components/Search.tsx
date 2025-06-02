@@ -1,17 +1,5 @@
-import { useRef } from "react";
-import { useRouter } from "next/router";
-import { css } from "@emotion/react";
-
-const box = css`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-`;
-
-const button = css`
-  border: 1px solid white;
-  color: white;
-`;
+import { useRouter } from 'next/router';
+import { useRef } from 'react';
 
 const Search = () => {
   const router = useRouter();
@@ -21,7 +9,7 @@ const Search = () => {
   return (
     <form
       ref={formRef}
-      css={box}
+      className="flex flex-row items-center"
       onSubmit={(e) => {
         e.preventDefault();
 
@@ -30,7 +18,7 @@ const Search = () => {
       }}
     >
       <input ref={inputRef} placeholder="닉네임을 입력해주세요." />
-      <button type="submit" css={button}>
+      <button type="submit" className="text-white border-[1px solid white]">
         검색
       </button>
     </form>

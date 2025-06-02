@@ -1,35 +1,23 @@
-import axios from "axios";
-import { Global } from "@emotion/react";
+import axios from 'axios';
+import dayjs from 'dayjs';
+import timezone from 'dayjs/plugin/timezone';
+import type { AppProps } from 'next/app';
 
-// layouts
-import Default from "layouts/Default";
+import config from '@/constants/config';
+import Default from '@/layouts/Default';
 
-// config
-import config from "constants/config";
-
-// utils
-import resetCss from "utils/resetCss";
-
-// dayjs
-import dayjs from "dayjs";
-import timezone from "dayjs/plugin/timezone";
-
-// types
-import type { AppProps } from "next/app";
+import './globals.css';
 
 dayjs.extend(timezone);
-dayjs.tz.setDefault("Asia/Seoul"); // 타임존 설정
+dayjs.tz.setDefault('Asia/Seoul'); // 타임존 설정
 
 axios.defaults.baseURL = config.host;
 
 const App = ({ Component, pageProps }: AppProps) => {
   return (
-    <>
-      <Global styles={(theme) => resetCss(theme)} />
-      <Default>
-        <Component {...pageProps} />
-      </Default>
-    </>
+    <Default>
+      <Component {...pageProps} />
+    </Default>
   );
 };
 

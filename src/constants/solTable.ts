@@ -1,4 +1,4 @@
-import { SolTable } from "types/app";
+import type { SolTable } from '@/types/app';
 
 export default {
   vi: [

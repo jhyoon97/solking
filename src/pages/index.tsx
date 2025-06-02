@@ -1,28 +1,7 @@
-import Head from "next/head";
-import { css } from "@emotion/react";
+import Head from 'next/head';
 
 // components
-import Search from "components/Search";
-
-const box = css`
-  display: flex;
-  width: 100%;
-  height: 100%;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
-
-const searchBox = css`
-  margin-bottom: 2rem;
-  padding: 2rem;
-  background: #232735;
-  border-radius: 1rem;
-`;
-
-const caution = css`
-  color: #fff;
-`;
+import Search from '@/components/Search';
 
 const Page = () => {
   return (
@@ -34,13 +13,13 @@ const Page = () => {
         <link rel="icon" href="/favicon.png" />
       </Head>
 
-      <div css={box}>
-        <div css={searchBox}>
+      <div className="flex flex-col justify-center items-center w-full h-full">
+        <div className="mb-[2rem] p-[2rem] bg-[#232735] rounded-[1rem]">
           <Search />
         </div>
 
-        <p css={caution}>
-          ※ 6차전직을 완료한 리부트/리부트2 캐릭터만 검색 가능합니다.
+        <p className="text-white">
+          ※ 6차전직을 완료한 캐릭터만 검색 가능합니다.
         </p>
       </div>
     </>

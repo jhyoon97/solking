@@ -1,32 +1,24 @@
-import { useState, useEffect } from "react";
-import { css } from "@emotion/react";
-import Head from "next/head";
-import dayjs from "dayjs";
+import clsx from 'clsx';
+import dayjs from 'dayjs';
+import type { GetServerSideProps } from 'next';
+import Head from 'next/head';
+import { useEffect, useState } from 'react';
 
-// components
-import Skill from "components/Skill";
-import CustomError from "components/CustomError";
-import { isAxiosError } from "axios";
-
-// constants
-import solTable from "constants/solTable";
-
-// utils
-import nexonAxios from "utils/nexonAxios";
-
-// types
-import type { GetServerSideProps } from "next";
+import CustomError from '@/components/CustomError';
+import Skill from '@/components/Skill';
+import solTable from '@/constants/solTable';
 import type {
   DetailPageError,
-  SkillPosition,
   HexaMatrixItemWithIcon,
-} from "types/app";
+  SkillPosition,
+} from '@/types/app';
 import type {
-  GetIdResponse,
   GetCharacterBasicInfoResponse,
-  GetSkillResponse,
   GetHexaMatrixResponse,
-} from "types/nexon-api";
+  GetIdResponse,
+  GetSkillResponse,
+} from '@/types/nexon-api';
+import nexonAxios from '@/utils/nexonAxios';
 
 interface Props {
   nickname: string;
@@ -41,60 +33,6 @@ interface Params {
   [key: string]: string;
   nickname: string;
 }
-
-const box = css`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-top: 2rem;
-  width: 100%;
-  height: 100%;
-`;
-
-const characterInfo = css`
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  padding: 1rem;
-  margin-bottom: 1rem;
-  width: 506px;
-  background: #232735;
-  border-radius: 1rem;
-  color: #fff;
-`;
-
-const matrix = css`
-  position: relative;
-  margin-bottom: 1rem;
-  width: 506px;
-  height: 507px;
-  background: url("/matrix.png") no-repeat;
-  background-color: #232735;
-  border-radius: 1rem;
-`;
-
-const totalInfo = css`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  align-items: center;
-  padding: 1rem;
-  width: 506px;
-  background: #232735;
-  border-radius: 1rem;
-  color: #fff;
-
-  & .group {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-
-    & span {
-      margin-left: 0.5rem;
-    }
-  }
-`;
 
 const viPositions: Array<SkillPosition> = [
   { x: 170, y: 142 },
@@ -140,14 +78,14 @@ const Page = ({
           (acc, skill) => {
             const column = (() => {
               switch (skill.hexa_core_type) {
-                case "스킬 코어":
-                  return "vi";
-                case "강화 코어":
-                  return "v";
-                case "마스터리 코어":
-                  return "mastery";
+                case '스킬 코어':
+                  return 'vi';
+                case '강화 코어':
+                  return 'v';
+                case '마스터리 코어':
+                  return 'mastery';
                 default:
-                  return "common";
+                  return 'common';
               }
             })();
 
@@ -165,17 +103,17 @@ const Page = ({
   }, [currentHexaMatrix]);
 
   const viSkills =
-    currentHexaMatrix?.filter((item) => item.hexa_core_type === "스킬 코어") ||
+    currentHexaMatrix?.filter((item) => item.hexa_core_type === '스킬 코어') ||
     [];
   const vSkills =
-    currentHexaMatrix?.filter((item) => item.hexa_core_type === "강화 코어") ||
+    currentHexaMatrix?.filter((item) => item.hexa_core_type === '강화 코어') ||
     [];
   const masterySkills =
     currentHexaMatrix?.filter(
-      (item) => item.hexa_core_type === "마스터리 코어"
+      (item) => item.hexa_core_type === '마스터리 코어'
     ) || [];
   const commonSkills =
-    currentHexaMatrix?.filter((item) => item.hexa_core_type === "공용 코어") ||
+    currentHexaMatrix?.filter((item) => item.hexa_core_type === '공용 코어') ||
     [];
 
   return (
@@ -187,23 +125,26 @@ const Page = ({
         <link rel="icon" href="/favicon.png" />
       </Head>
 
-      <div css={box}>
+      <div className="flex flex-col items-center pt-[2rem] w-full h-full">
         {errorCode ? (
           <CustomError errorCode={errorCode} />
         ) : (
           <>
-            <div css={characterInfo}>
+            <div className="flex flex-row justify-start items-center p-[1rem] mb-[1rem] w-[506px] bg-[#232735] rounded-[1rem] text-white">
               <img alt={`${level} ${className} ${nickname}`} src={image} />
               <span>
                 Lv.{level} {className} {nickname}
               </span>
             </div>
 
-            <div css={matrix}>
+            <div
+              className="relative mb-[1rem] w-[506px] h-[507px] bg-[#232735] rounded-[1rem]"
+              style={{ background: "url('/matrix.png') no-repeat" }}
+            >
               {viSkills
                 .concat(
                   new Array(6 - viSkills.length).fill({
-                    hexa_core_type: "스킬 코어",
+                    hexa_core_type: '스킬 코어',
                   })
                 )
                 .map((item, index) => {
@@ -221,7 +162,7 @@ const Page = ({
               {vSkills
                 .concat(
                   new Array(4 - vSkills.length).fill({
-                    hexa_core_type: "강화 코어",
+                    hexa_core_type: '강화 코어',
                   })
                 )
                 .map((item, index) => {
@@ -239,7 +180,7 @@ const Page = ({
               {masterySkills
                 .concat(
                   new Array(4 - masterySkills.length).fill({
-                    hexa_core_type: "마스터리 코어",
+                    hexa_core_type: '마스터리 코어',
                   })
                 )
                 .map((item, index) => {
@@ -257,7 +198,7 @@ const Page = ({
               {commonSkills
                 .concat(
                   new Array(4 - commonSkills.length).fill({
-                    hexa_core_type: "공용 코어",
+                    hexa_core_type: '공용 코어',
                   })
                 )
                 .map((item, index) => {
@@ -274,26 +215,40 @@ const Page = ({
                 })}
             </div>
 
-            <div css={totalInfo}>
-              <div className="group">
-                <img
-                  alt="솔 에르다"
-                  src="/solErda.png"
-                  width="32"
-                  height="33"
-                />
-                <span>{total.erda}</span>
-              </div>
-              <div className="group">
-                <img
-                  alt="솔 에르다"
-                  src="/solErdaPeace.png"
-                  width="30"
-                  height="31"
-                />
-                <span>{total.peace}</span>
-              </div>
-            </div>
+            <ul
+              className={clsx([
+                'flex flex-row justify-around items-center p-[1rem] w-[506px] bg-[#232735] rounded-[1rem] text-white',
+                '[dl]:(flex flex-row)',
+                '[dd]:(ml-[0.5rem])',
+              ])}
+            >
+              <li>
+                <dl>
+                  <dt>
+                    <img
+                      alt="솔 에르다"
+                      src="/solErda.png"
+                      width="32"
+                      height="33"
+                    />
+                  </dt>
+                  <dd>{total.erda}</dd>
+                </dl>
+              </li>
+              <li>
+                <dl>
+                  <dt>
+                    <img
+                      alt="솔 에르다"
+                      src="/solErdaPeace.png"
+                      width="30"
+                      height="31"
+                    />
+                  </dt>
+                  <dd>{total.peace}</dd>
+                </dl>
+              </li>
+            </ul>
           </>
         )}
       </div>
@@ -307,8 +262,8 @@ export const getServerSideProps: GetServerSideProps<Props, Params> = async ({
   if (params?.nickname) {
     try {
       const date = dayjs()
-        .add(dayjs().hour() > 1 ? -1 : -2, "day")
-        .format("YYYY-MM-DD"); // 조회 기준일 - 오전 1시 이후라면 전날의 데이터, 1시 이전이라면 2일 전 데이터 조회
+        .add(dayjs().hour() > 1 ? -1 : -2, 'day')
+        .format('YYYY-MM-DD'); // 조회 기준일 - 오전 1시 이후라면 전날의 데이터, 1시 이전이라면 2일 전 데이터 조회
 
       // 식별자 조회
       const {
@@ -330,11 +285,11 @@ export const getServerSideProps: GetServerSideProps<Props, Params> = async ({
         `/character/basic?ocid=${ocid}&date=${date}`
       );
 
-      if (classLevel !== "6") {
+      if (classLevel !== '6') {
         return {
           props: {
             nickname: params.nickname,
-            errorCode: "IS_NOT_SIXTH_CLASS",
+            errorCode: 'IS_NOT_SIXTH_CLASS',
           },
         };
       }
@@ -365,7 +320,7 @@ export const getServerSideProps: GetServerSideProps<Props, Params> = async ({
               icon:
                 (item.linked_skill.length > 1
                   ? currentSkills.find((skill) =>
-                      item.hexa_core_type === "강화 코어"
+                      item.hexa_core_type === '강화 코어'
                         ? skill.skill_name.includes(
                             item.linked_skill[0].hexa_skill_id
                           )
@@ -373,23 +328,23 @@ export const getServerSideProps: GetServerSideProps<Props, Params> = async ({
                           item.linked_skill[0].hexa_skill_id
                     )?.skill_icon
                   : currentSkills.find((skill) =>
-                      item.hexa_core_type === "강화 코어"
+                      item.hexa_core_type === '강화 코어'
                         ? skill.skill_name.includes(item.hexa_core_name)
                         : skill.skill_name === item.hexa_core_name
-                    )?.skill_icon) || "",
+                    )?.skill_icon) || '',
             };
           }),
         },
       };
     } catch (err) {
       return {
-        props: { nickname: params.nickname, errorCode: "UNKNOWN" },
+        props: { nickname: params.nickname, errorCode: 'UNKNOWN' },
       };
     }
   }
 
   return {
-    props: { nickname: "ERROR", errorCode: "UNKNOWN" },
+    props: { nickname: 'ERROR', errorCode: 'UNKNOWN' },
   };
 };
 
