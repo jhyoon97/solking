@@ -25,7 +25,7 @@ const Search = () => {
       onSubmit={(e) => {
         e.preventDefault();
 
-        router.push(`/${inputRef.current?.value}`);
+        router.push(`/character/${inputRef.current?.value}`);
         formRef.current?.reset();
       }}
     >

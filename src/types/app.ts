@@ -19,7 +19,4 @@ interface SolTableCell {
   peace: number;
 }
 
-export type DetailPageError =
-  | "IS_NOT_REBOOT_WORLD"
-  | "IS_NOT_SIXTH_CLASS"
-  | "UNKNOWN";
+export type DetailPageError = "IS_NOT_SIXTH_CLASS" | "UNKNOWN";

@@ -2,9 +2,7 @@
 
 ## 1. 패키지매니저
 
-- yarn berry
-  - zero-install 사용
-  - pnp 사용
+- yarn
 
 ## 2. 코드 스타일
 

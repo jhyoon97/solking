@@ -22,8 +22,6 @@ const CustomError = ({ errorCode }: Props) => {
       <p css={text}>
         {(() => {
           switch (errorCode) {
-            case "IS_NOT_REBOOT_WORLD":
-              return "리부트월드 캐릭터만 이용 가능합니다.";
             case "IS_NOT_SIXTH_CLASS":
               return "6차전직을 완료하지 않은 캐릭터입니다.";
             default:
