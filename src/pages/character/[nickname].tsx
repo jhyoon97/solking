@@ -61,6 +61,11 @@ const commonPositions: Array<SkillPosition> = [
   { x: 408, y: 406 },
 ];
 
+const summaryStyles = {
+  item: 'flex flex-row items-center',
+  text: 'ml-[0.5rem]',
+};
+
 const Page = ({
   nickname,
   level,
@@ -137,10 +142,7 @@ const Page = ({
               </span>
             </div>
 
-            <div
-              className="relative mb-[1rem] w-[506px] h-[507px] bg-[#232735] rounded-[1rem]"
-              style={{ background: "url('/matrix.png') no-repeat" }}
-            >
+            <div className="relative mb-[1rem] w-[506px] h-[507px] bg-[#232735] bg-[url('/matrix.png')] bg-cover bg-no-repeat rounded-[1rem]">
               {viSkills
                 .concat(
                   new Array(6 - viSkills.length).fill({
@@ -215,15 +217,9 @@ const Page = ({
                 })}
             </div>
 
-            <ul
-              className={clsx([
-                'flex flex-row justify-around items-center p-[1rem] w-[506px] bg-[#232735] rounded-[1rem] text-white',
-                '[dl]:(flex flex-row)',
-                '[dd]:(ml-[0.5rem])',
-              ])}
-            >
+            <ul className="flex flex-row justify-around items-center p-[1rem] w-[506px] bg-[#232735] rounded-[1rem] text-white">
               <li>
-                <dl>
+                <dl className={summaryStyles.item}>
                   <dt>
                     <img
                       alt="솔 에르다"
@@ -232,11 +228,11 @@ const Page = ({
                       height="33"
                     />
                   </dt>
-                  <dd>{total.erda}</dd>
+                  <dd className={summaryStyles.text}>{total.erda}</dd>
                 </dl>
               </li>
               <li>
-                <dl>
+                <dl className={summaryStyles.item}>
                   <dt>
                     <img
                       alt="솔 에르다"
@@ -245,7 +241,7 @@ const Page = ({
                       height="31"
                     />
                   </dt>
-                  <dd>{total.peace}</dd>
+                  <dd className={summaryStyles.text}>{total.peace}</dd>
                 </dl>
               </li>
             </ul>

@@ -17,7 +17,11 @@ const Search = () => {
         formRef.current?.reset();
       }}
     >
-      <input ref={inputRef} placeholder="닉네임을 입력해주세요." />
+      <input
+        ref={inputRef}
+        className="bg-white"
+        placeholder="닉네임을 입력해주세요."
+      />
       <button type="submit" className="text-white border-[1px solid white]">
         검색
       </button>

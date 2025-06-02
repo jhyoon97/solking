@@ -1,4 +1,4 @@
-import { BiSolidLock } from 'react-icons/bi';
+import { RiLock2Fill } from '@react-icons/all-files/ri/RiLock2Fill';
 
 // types
 import type { SkillPosition } from '@/types/app';
@@ -31,16 +31,16 @@ const Skill = ({ variant, name, level, icon, position }: Props) => {
       style={{
         top: position.y,
         left: position.x,
-        backgroundImage: `url(${background}) no-repeat`,
+        background: `url("${background}") no-repeat`,
       }}
     >
       {!icon && (
-        <div className="absolute top-[50%] left-[50%] translate-[-50%, -50%] drop-shadow-[0 0 2px rgba(155, 155, 155, 0.5)]">
-          <BiSolidLock color="rgba(255, 255, 255, 0.3)" size="35" />
+        <div className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] filter-[drop-shadow(0_0_2px_rgba(155,155,155,0.5))]">
+          <RiLock2Fill color="rgba(255, 255, 255, 0.3)" size="35" />
         </div>
       )}
       {icon && (
-        <span className="m-[14px 0 2px] p-[1px 0] w-[30px] bg-[rgba(0, 0, 0, 0.4)] rounded-[1rem] shadow-[rgba(255, 255, 255, 1) 0 0 2px] leading-[1] text-[0.8rem] font-light text-white text-center">
+        <span className="shadow-[0px_0px_2px_rgba(255,255,255,1)] mt-[14px] mx-0 mb-[2px] py-[1px] px-0 w-[30px] bg-[rgba(0,0,0,0.4)] rounded-[1rem] leading-[1] text-[0.8rem] font-light text-white text-center">
           {level}
         </span>
       )}
