@@ -364,23 +364,24 @@ export const getServerSideProps: GetServerSideProps<Props, Params> = async ({
               hexa_core_type: item.hexa_core_type,
               icon:
                 (item.linked_skill.length > 1
-                  ? currentSkills.find(
-                      (skill) =>
-                        skill.skill_name === item.linked_skill[0].hexa_skill_id
+                  ? currentSkills.find((skill) =>
+                      item.hexa_core_type === "강화 코어"
+                        ? skill.skill_name.includes(
+                            item.linked_skill[0].hexa_skill_id
+                          )
+                        : skill.skill_name ===
+                          item.linked_skill[0].hexa_skill_id
                     )?.skill_icon
-                  : currentSkills.find(
-                      (skill) => skill.skill_name === item.hexa_core_name
+                  : currentSkills.find((skill) =>
+                      item.hexa_core_type === "강화 코어"
+                        ? skill.skill_name.includes(item.hexa_core_name)
+                        : skill.skill_name === item.hexa_core_name
                     )?.skill_icon) || "",
             };
           }),
         },
       };
     } catch (err) {
-      if (isAxiosError(err)) {
-        console.log(err.request);
-        console.log(err.response?.data);
-      }
-
       return {
         props: { nickname: params.nickname, errorCode: "UNKNOWN" },
       };
