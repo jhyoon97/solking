@@ -378,7 +378,7 @@ export const getServerSideProps: GetServerSideProps<Props, Params> = async ({
     } catch (err) {
       if (isAxiosError(err)) {
         console.log(err.request);
-        console.log(err.response.data);
+        console.log(err.response?.data);
       }
 
       return {
